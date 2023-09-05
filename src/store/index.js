@@ -1,8 +1,39 @@
 import { createStore } from 'redux';
+import { createSlice } from '@reduxjs/toolkit';
 
-const storeReducer = (state = { counter: 0, showCounter: true }, action) => {
+const initialState = { counter: 0, showCounter: true };
+
+createSlice({
+  name: 'counter', // 'counter' => vous choisissez le nom
+  initialState, // initialState: initialState
+  /**
+   * - All the reducers you need
+   * - Receives autaomatically the latest state and action(if you need)
+   * - Clone the latest state
+   */
+  reducers: {
+    increment(state) {
+      state.counter++;
+    },
+    decrement(state) {
+      state.counter--;
+    },
+    increase(state, action) {
+      state.counter = state.counter + action.amount;
+    },
+    toggleCounter(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
+
+const counterReducer = (state = initialState, action) => {
   if (action.type === 'increment') {
-    return { counter: state.counter + 1, showCounter: state.showCounter };
+    // state.counter++; // That is wrong => NEVER MUTATE THE EXISTING STATE
+    return {
+      counter: state.counter + 1,
+      showCounter: state.showCounter,
+    };
   }
 
   if (action.type === 'increase') {
@@ -26,6 +57,6 @@ const storeReducer = (state = { counter: 0, showCounter: true }, action) => {
   return state;
 };
 
-const store = createStore(storeReducer);
+const store = createStore(counterReducer);
 
 export default store;
